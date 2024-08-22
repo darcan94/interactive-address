@@ -14,13 +14,13 @@ export default function Map({ address }){
     useEffect( () => {
         const fetchData = async () => {
             const provider = new OpenStreetMapProvider()
-            const results = await provider.search({ query : address })
+            const results = await provider.search({ query : address.name })
 
-            if(results) setPosition([results[0].y, results[0].x])
+            if(results.length) setPosition([results[0].y, results[0].x])
         }
 
         fetchData()
-    }, [address])
+    }, [address.name])
 
     return(
         <div className="w-7/12">
@@ -32,20 +32,20 @@ export default function Map({ address }){
                 style={{ height: "100vh" , width: "100%" }}
                 zoomControl={false}
                 preferCanvas={true}>
-                    <Fly to={position} />
+                    <Fly to={position} zoom={address.zoom}/>
                     <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"/>
                     <Marker position={position}>
-                        <Popup>{ address }</Popup>
+                        <Popup>{ address.name }</Popup>
                     </Marker>
             </MapContainer>
         </div>
     )
 }
 
-function Fly({ to }){
+function Fly({ to, zoom = 6 }){
     const map = useMap()
-    map.flyTo(to, 16, {duration: .8, animate: true})
+    map.flyTo(to, zoom, { duration: .8 })
     return null
 }

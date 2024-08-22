@@ -10,7 +10,7 @@ const Map = dynamic(() => import("./map"), {
 })
 
 export default function InteractiveAddress(){
-    const [address, setAddress] = useState("Paraguay")
+    const [address, setAddress] = useState({name: "Paraguay", zoom: 4})
 
     return(
         <>
