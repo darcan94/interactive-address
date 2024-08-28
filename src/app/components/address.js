@@ -13,13 +13,12 @@ export default function Address({ onClick }){
     const handleClick = (value) => {
         onClick(value)
     }
-    console.log(Object.keys(address));
 
     return (
         <div className="flex flex-col w-5/12 justify-left px-14">
             <div>
                 {
-                    isSkeletonView 
+                    !isSkeletonView 
                     ? <div className="flex flex-wrap">
                             {Object.entries(address).map(([key, value]) => (
                                 <div className="address text-4xl" key={key} onClick={() => handleClick(value)}>
@@ -46,7 +45,7 @@ export default function Address({ onClick }){
             </div>
             <button 
                 onClick={() => setIsSkeletonView(!isSkeletonView)}
-                className="text-xs absolute bottom-0 my-4 p-2 bg-gray-700 rounded-lg">
+                className={`text-xs absolute bottom-0 my-4 p-2 bg-gray-700 rounded-lg`}>
                     SKELETON VIEW
             </button>
         </div>

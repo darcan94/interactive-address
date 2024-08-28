@@ -9,13 +9,28 @@ import "leaflet-defaulticon-compatibility"
 
 export default function Map({ address }){
     const [position, setPosition] = useState([-23.316, -58.169])
+    const [theme, setTheme] = useState('dark');
     const mapRef = useRef(null)
 
+    const url = theme === 'dark' 
+                ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'   
+                : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png' 
+
     useEffect( () => {
+        const preferColorScheme = window.matchMedia("(prefers-color-scheme: dark)")
+        setTheme(preferColorScheme.matches ? 'dark' : 'light')
+        
+        preferColorScheme.addEventListener('change', (event) => {
+            if (event.matches) 
+                setTheme('dark')
+            else
+                setTheme('light') 
+        })
+        
+
         const fetchData = async () => {
             const provider = new OpenStreetMapProvider()
             const results = await provider.search({ query : address.name })
-
             if(results.length) setPosition([results[0].y, results[0].x])
         }
 
@@ -34,8 +49,8 @@ export default function Map({ address }){
                 preferCanvas={true}>
                     <Fly to={position} zoom={address.zoom}/>
                     <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"/>
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url={url}/>
                     <Marker position={position}>
                         <Popup>{ address.name }</Popup>
                     </Marker>
